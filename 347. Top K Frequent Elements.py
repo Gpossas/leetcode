@@ -56,42 +56,7 @@ class SolutionBucketSort:
                 result.append(item)
                 k -= 1
                 if not k: return result
-
-class SolutionQuickSelect:
-    def topKFrequent(self, nums: list[int], k: int) -> list[int]:
-        # O(N)
-        frequency = {}
-        for num in nums:
-            frequency[num] = frequency.get(num, 0) + 1
-        
-        values = [key for key in frequency]
-        return self.quick_select(values, k, frequency)
-
-    def quick_select(self, A, k, frequency): 
-        left, right = 0, len(A) - 1  
-        while left < right:
-            partition_index = self.partition(left, right, A, frequency)
-            if partition_index < k:
-                left = partition_index - 1
-            elif partition_index + 1:
-                right = partition_index + 1
-            else:
-                return A[k:]
-
-    def partition(self, left, right, nums, frequency):
-        # TODO: PROBLEM WITH FREQUENCY KEY == 0
-        pivot = frequency[right]
-        pivot_index = left
-        while left < right:
-            while left < right and frequency.get(right, 0) > pivot:
-                right -= 1
-            while left < right and frequency.get(left, pivot+1) <= pivot:
-                left += 1
-            nums[right], nums[left] = nums[left], nums[right]
-        nums[left], nums[pivot_index] = nums[pivot_index], nums[left]
-        return right
     
 print(SolutionMaxHeap().topKFrequent([1,1,1,2,2,3], 2))
 print(SolutionMinHeap().topKFrequent([1,1,1,2,2,3], 2))
 print(SolutionBucketSort().topKFrequent([1,1,1,2,2,3,7,7], 3))
-print(SolutionQuickSelect().topKFrequent([1,1,1,2,2,3,7,7], 3))
