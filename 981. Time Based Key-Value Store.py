@@ -1,27 +1,31 @@
+VALUE, TIMESTAMP, NO_DATA = 0, 1, ""
 class TimeMap:
-    def __init__(self) -> None:
-        self._map = {}
 
-    def set(self, key: str, value: str, timestamp: int):
-        if key not in self._map:
-            self._map[key] = []
-        self._map[key].append( (value, timestamp) )
-    
-    def get(self, key: str, timestamp: int):
-        timestamps = self._map.get(key)
-        if not timestamps:
-            return ""
+    def __init__(self):
+        self.time_map = {}
+
+    def set(self, key: str, value: str, timestamp: int) -> None:
+        if not key in self.time_map:
+            self.time_map[key] = []
+        self.time_map[key].append( (value, timestamp) )
+
+    def get(self, key: str, timestamp: int) -> str:
+        if (
+            not key in self.time_map 
+            or timestamp < (timestamps := self.time_map[key])[0][TIMESTAMP]
+        ): return NO_DATA
         
         left, right = 0, len(timestamps) - 1
         while left < right:
-            # upper bound
-            middle = (1 + left + right) >> 1
+            upper_bound = (left + right + 1) >> 1
 
-            if timestamp < timestamps[middle][1]:
-                right = middle - 1
+            if timestamp < timestamps[upper_bound][TIMESTAMP]:
+                right = upper_bound - 1
             else:
-                left = middle
-        return "" if timestamp < timestamps[0][1] else timestamps[left][0]
+                left = upper_bound
+        return timestamps[left][VALUE]
+
+
     
 # tm = TimeMap()
 
